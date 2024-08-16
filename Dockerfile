@@ -1,11 +1,19 @@
-# Dockerfile for the Flask microservice
-FROM python:3.8-slim
+# Dockerfile
 
+# Use a base image that suits your application (e.g., Python)
+FROM python:3.9-slim
+
+# Install necessary packages including stress
+RUN apt-get update && apt-get install -y \
+    stress \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up your application
 WORKDIR /app
-
-COPY requirements.txt requirements.txt
+COPY . /app
 RUN pip install -r requirements.txt
 
-COPY app.py app.py
+# Expose the port and run the application
+EXPOSE 80
+CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]
 
-CMD ["python", "app.py"]
